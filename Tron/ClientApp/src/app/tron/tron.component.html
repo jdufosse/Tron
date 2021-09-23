@@ -1,0 +1,95 @@
+<div #tron>
+  <div class="page-header">
+    <h1>Tron</h1>
+    <div class="header-content">
+      <div class="back-btn-group mb-6">
+        <button type="button" class="btn btn-secondary" *ngIf="etape != ETAPE_ENUM.NONE" (click)="backToMainMenu()">Main menu</button>
+      </div>
+      <!--Pseudo + Bike-->
+      <div class="player-bike mb-3">
+        <div>
+          <img id="icon_bike_one" src="../../assets/tron/bike_player_one.jpg" class="bike-icon" />
+          <img id="icon_bike_two" src="../../assets/tron/bike_player_two.jpg" class="bike-icon" />
+        </div>
+      </div>
+      <!--Score-->
+      <div class="score mb-3" *ngIf="etape == ETAPE_ENUM.GAME">
+        <div class="input-group">
+          <span class="input-group-addon">{{isFirstBike ? userName : opponentUserName }}</span>
+          <span class="form-control">{{score}}</span>
+          <span class="input-group-addon">{{isFirstBike == false ? userName : opponentUserName }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="menu-room col-lg-6" *ngIf="etape == ETAPE_ENUM.NONE">
+    <!--Pseudo-->
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">User name</span>
+      <input #inputUserName type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" (change)="changeUserName(inputUserName.value)" />
+    </div>
+    <!--Matchmaking || Private room-->
+    <div class="input-group-btn" role="group">
+      <button type="button" class="btn btn-secondary" (click)="doMatchMaking()" [disabled]="!inputUserName.value || inputUserName.value.length === 0">Matchmaking</button>
+      <button type="button" class="btn btn-secondary" (click)="createPrivateRoom()" [disabled]="!inputUserName.value || inputUserName.value.length === 0">Create room</button>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">Private room code</span>
+      <input #inputRoomName type="text" class="form-control" placeholder="Room name" aria-describedby="basic-addon1" />
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-secondary" (click)="joinPrivateRoom(inputRoomName.value)" [disabled]="!inputUserName.value || inputUserName.value.length === 0 || !inputRoomName.value || inputRoomName.value.length === 0">Join room</button>
+      </div>
+    </div>
+  </div>
+  <div class="waiting-room container" *ngIf="etape == ETAPE_ENUM.ROOM">
+    <!--Preparation room-->
+    <div>
+      <h1>{{(isPrivateRoom) ? 'Match making': 'Private room'}}</h1>
+      <div *ngIf="gameInPreparation">
+        The game is in preparation.... Please wait.
+      </div>
+      <div class="input-group" *ngIf="isPrivateRoom">
+        <span class="input-group-addon">Private room code</span>
+        <span class="form-control">{{roomName}}</span>
+      </div>
+      <!--List of player-->
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Player 1 : {{ isFirstBike ? userName : opponentUserName }}
+          <!--<img />-->
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Player 2 : {{ !isFirstBike ? userName : opponentUserName }}
+          <!--<img />-->
+        </li>
+      </ul>
+      <!--Button "Ready"-->
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-secondary" (click)="switchBikes()">Switch bikes</button>
+        <button type="button" class="btn btn-secondary" (click)="readyForGame()">Ready !</button>
+      </div>
+    </div>
+  </div>
+  <div class="game container" *ngIf="etape == ETAPE_ENUM.GAME">
+    <canvas #tronArena width="{{canvasWidth}}" height="{{canvasHeight}}" (load)="startGame()"></canvas>
+  </div>
+  <div id="modalDialog" tabindex="-1" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{modalTitle}}</h5>
+        </div>
+        <div class="modal-body">
+          <p>{{modalMessage}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" *ngIf="modalType == ETAPE_ENUM.CLOSE" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" *ngIf="modalType == ETAPE_ENUM.LEFT || modalType == ETAPE_ENUM.RESTART" data-dismiss="modal" (click)="backToMainMenu()">Exit</button>
+          <button type="button" class="btn btn-secondary" *ngIf="modalType == ETAPE_ENUM.RESTART" data-dismiss="modal" (click)="readyForGame()">Ready</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="openModalButton" data-toggle="modal" data-target="#modalDialog"  (click)="openModal('Titre de la pop-in', 'Message a écrire !', MODAL_ENUM.CLOSE);">Open Modal</button>
+  <!--[hidden]="true"-->
+</div>

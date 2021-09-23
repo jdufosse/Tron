@@ -1,0 +1,26 @@
+<h1>Request</h1>
+
+<p>This component allow to send REST request to other server.</p>
+
+<div>
+  URL
+  <input type="text" [(ngModel)]="url" />
+  <select (change)="changeMode($event.target.value)">
+    <option *ngFor="let requestType of requestTypes" [value]="requestType">{{requestType}}</option>
+  </select>
+</div>
+
+<div>
+  DATA
+  <textarea [(ngModel)]="data"></textarea>
+</div>
+
+<button (click)="sendRequest();">Send</button>
+<button (click)="sendTestRequest();">Test</button>
+
+
+<div>
+  <p>
+    {{result}}
+  </p>
+</div>

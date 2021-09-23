@@ -1,0 +1,25 @@
+<div class="snake">
+  <div class="snake-loading" *ngIf="isInitialized == false">Loading...</div>
+  <div class="score" *ngIf="isInitialized == true">
+    Highest score : {{highestScore}}
+    Score : {{score}}
+  </div>
+  <div class="snake-container" *ngIf="isInitialized == true">
+    <div class="snake-viewport" [style.width.px]="viewport.width" [style.height.px]="viewport.height">
+      <div class="snake-part snake-apple" [style.left.px]="apple.positionX" [style.top.px]="apple.positionY"></div>
+      <div *ngFor="let snakePart of snakeParts" [class]="snakePart.class" [style.left.px]="snakePart.positionX" [style.top.px]="snakePart.positionY"></div>
+      <div class="snake-end-pop-in" *ngIf="isEndGame">
+        <div class="snake-end-pop-in-contents">
+          <p>Game Over !</p>
+          <button (click)="restartGame();">Restart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    {{message}}
+  </div>
+  <div *ngIf="isInitialized == true">
+    <button (click)="pauseGame();">{{(this.isPaused)? 'Continue' : 'Pause'}}</button>
+  </div>
+</div>
